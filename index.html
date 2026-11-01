@@ -12,7 +12,8 @@
     <style>
         :root {
             --bg-color: #030205;
-            --card-bg: rgba(10, 8, 18, 0.92);
+            --card-bg: rgba(10, 8, 18, 0.85);
+            --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
             --neon-pink: #ff007f;
@@ -41,6 +42,17 @@
             align-items: center;
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* Canvas do Background Animado de Código/Jogos */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
 
         /* Scanlines Cyberpunk */
@@ -77,78 +89,54 @@
             gap: 16px;
         }
 
-        /* --- MOLDURA LED FINA E 100% SINCRONIZADA --- */
-        .led-box {
+        /* --- MOLDURA LED FINA E ROTATIVA APENAS NA CAIXA DE APRESENTAÇÃO --- */
+        .led-profile-box {
             position: relative;
             width: 100%;
-            border-radius: 22px;
+            border-radius: 24px;
+            padding: 2px; /* Espessura fina do LED */
+            overflow: hidden;
             background: rgba(18, 16, 32, 0.5);
-            transition: transform 0.3s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
         }
 
-        .led-svg {
+        .led-profile-box::before {
+            content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            width: calc(100% + 4px);
-            height: calc(100% + 4px);
-            pointer-events: none;
-            overflow: visible;
-            z-index: 3;
+            top: -150%;
+            left: -150%;
+            width: 400%;
+            height: 400%;
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                var(--neon-cyan), 
+                var(--neon-purple), 
+                var(--neon-pink)
+            );
+            animation: rotate-led 6s linear infinite;
         }
 
-        .led-bg-line {
-            fill: none;
-            stroke: rgba(0, 243, 255, 0.1);
-            stroke-width: 1.2;
+        @keyframes rotate-led {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .led-anim-line {
-            fill: none;
-            stroke: url(#led-grad);
-            stroke-width: 2; /* LED mais fino e refinado */
-            stroke-dasharray: 25 75; 
-            stroke-linecap: round;
-            filter: drop-shadow(0 0 4px #00f3ff); /* Brilho ajustado para o traço fino */
-            animation: led-travel 8s ease-in-out infinite;
-        }
-
-        @keyframes led-travel {
-            0% {
-                stroke-dashoffset: 100;
-            }
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        .led-box:hover {
-            transform: translateY(-3px) scale(1.01);
-        }
-
-        /* Conteúdo interno perfeitamente alinhado */
-        .led-content {
+        /* Conteúdo interno da caixa de apresentação */
+        .profile-content {
             position: relative;
             z-index: 2;
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 243, 255, 0.15);
-        }
-
-        /* Profile Header */
-        .profile-card {
+            border-radius: 22px;
             padding: 28px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05);
         }
 
         .avatar-wrapper {
@@ -220,15 +208,33 @@
             gap: 14px;
         }
 
-        /* Link Cards */
+        /* Link Cards Padrão */
         .link-card {
+            position: relative;
             width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 8px 25px -5px rgba(0, 243, 255, 0.3);
+        }
+
+        .link-card.highlight {
+            border-color: rgba(188, 19, 254, 0.5);
+            background: rgba(25, 12, 40, 0.75);
         }
 
         .link-left {
@@ -283,11 +289,21 @@
         /* X.com Feed Box */
         .x-feed-card {
             width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
             padding: 16px 18px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .x-feed-card:hover {
+            border-color: rgba(0, 243, 255, 0.4);
         }
 
         .x-header {
@@ -332,7 +348,10 @@
         }
 
         .action-btn {
-            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
             padding: 14px;
             display: flex;
             align-items: center;
@@ -344,7 +363,14 @@
             font-size: 0.9rem;
             cursor: pointer;
             text-decoration: none;
+            transition: all 0.3s ease;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        .action-btn:hover {
+            border-color: var(--neon-purple);
+            background: rgba(188, 19, 254, 0.15);
+            transform: translateY(-2px);
         }
 
         .action-btn i {
@@ -371,6 +397,11 @@
         .social-link {
             color: var(--text-muted);
             font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--neon-cyan);
         }
 
         .toast {
@@ -403,26 +434,15 @@
 </head>
 <body>
 
-    <!-- SVG Global de Gradientes Neon -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-        <defs>
-            <linearGradient id="led-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00f3ff" />
-                <stop offset="50%" stop-color="#bc13fe" />
-                <stop offset="100%" stop-color="#ff007f" />
-            </linearGradient>
-        </defs>
-    </svg>
+    <!-- Canvas do Fundo Animado (Código, Jogos e Emojis) -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="scanlines"></div>
 
     <main class="main-container">
-        <!-- 1. Caixa de Apresentação -->
-        <div class="led-box">
-            <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-            </svg>
-            <div class="led-content">
-                <section class="profile-card">
+        <!-- 1. Caixa de Apresentação com LED rotativo -->
+        <div class="led-profile-box">
+            <div class="profile-content">
+                <section class="profile-card" style="width: 100%;">
                     <div class="avatar-wrapper">
                         <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
                     </div>
@@ -436,117 +456,68 @@
 
         <section class="links-container">
             <!-- 2. Botão GitHub -->
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
-                        <div class="link-left">
-                            <div class="icon-box"><i class="fa-brands fa-github"></i></div>
-                            <div class="link-info">
-                                <span class="link-title">GitHub</span>
-                                <span class="link-subtitle">@ocaioalencar</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
-                    </a>
+            <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-github"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">GitHub</span>
+                        <span class="link-subtitle">@ocaioalencar</span>
+                    </div>
                 </div>
-            </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
 
             <!-- 3. Botão Instagram -->
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
-                        <div class="link-left">
-                            <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
-                            <div class="link-info">
-                                <span class="link-title">Instagram</span>
-                                <span class="link-subtitle">@ocaioalencar</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
-                    </a>
+            <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">Instagram</span>
+                        <span class="link-subtitle">@ocaioalencar</span>
+                    </div>
                 </div>
-            </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
 
             <!-- 4. Botão Facebook -->
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
-                        <div class="link-left">
-                            <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
-                            <div class="link-info">
-                                <span class="link-title">Facebook</span>
-                                <span class="link-subtitle">@ocaioalencar1</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
-                    </a>
+            <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">Facebook</span>
+                        <span class="link-subtitle">@ocaioalencar1</span>
+                    </div>
                 </div>
-            </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
 
             <!-- 5. Caixa do Tweet do X -->
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <div class="x-feed-card">
-                        <div class="x-header">
-                            <div class="x-header-left">
-                                <i class="fa-brands fa-x-twitter"></i>
-                                <span>Último Tweet</span>
-                            </div>
-                            <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
-                        </div>
-                        
-                        <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
-                            <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
-                                <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
-                            </blockquote>
-                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                        </div>
+            <div class="x-feed-card">
+                <div class="x-header">
+                    <div class="x-header-left">
+                        <i class="fa-brands fa-x-twitter"></i>
+                        <span>Último Tweet</span>
                     </div>
+                    <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
+                </div>
+                
+                <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
+                    <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
+                        <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
+                    </blockquote>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 </div>
             </div>
         </section>
 
         <!-- 6. Grid de Ações Rápidas (E-mail e Copiar Link) -->
         <section class="actions-grid">
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
-                        <i class="fa-solid fa-envelope"></i> E-mail
-                    </a>
-                </div>
-            </div>
-
-            <div class="led-box">
-                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
-                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
-                </svg>
-                <div class="led-content">
-                    <button class="action-btn" id="btn-copy" style="background: transparent; border: none; width: 100%;">
-                        <i class="fa-solid fa-link"></i> Copiar Link
-                    </button>
-                </div>
-            </div>
+            <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
+                <i class="fa-solid fa-envelope"></i> E-mail
+            </a>
+            <button class="action-btn" id="btn-copy">
+                <i class="fa-solid fa-link"></i> Copiar Link
+            </button>
         </section>
 
         <footer class="footer">
@@ -554,3 +525,77 @@
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
                 <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+            <span>Powered by Caio Alencar • 2026</span>
+        </footer>
+    </main>
+
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan);"></i>
+        <span id="toast-message">Link copiado com sucesso!</span>
+    </div>
+
+    <script>
+        // --- BACKGROUND FLUTUANTE DE CÓDIGOS, JOGOS E EMOJIS ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initElements();
+        });
+
+        const mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        const symbols = [
+            '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', 
+            'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
+            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt',
+            '🚀', '👾', '🔥', '🔒', '💡', '🤖', '✨'
+        ];
+
+        class FloatingElement {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.text = symbols[Math.floor(Math.random() * symbols.length)];
+                this.fontSize = Math.floor(Math.random() * 8) + 12;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                
+                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.4 + 0.4;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+       
