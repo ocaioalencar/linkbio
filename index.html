@@ -87,7 +87,7 @@
             gap: 20px;
         }
 
-        /* Moldura com LED fino girando apenas na caixa de apresentação */
+        /* Moldura com LED fino girando na caixa de apresentação */
         .led-profile-box {
             position: relative;
             width: 100%;
@@ -136,16 +136,20 @@
             text-align: center;
         }
 
+        /* Avatar Perfeitamente Centralizado + Efeito Cyber-Negative no Hover/Active */
         .avatar-wrapper {
             position: relative;
             width: 120px;
             height: 120px;
-            margin-bottom: 16px;
+            margin: 0 auto 16px auto;
             border-radius: 50%;
             padding: 4px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
             animation: float-avatar 4s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         @keyframes float-avatar {
@@ -163,9 +167,10 @@
             transition: transform 0.3s ease, filter 0.3s ease;
         }
 
-        .avatar-wrapper:hover .avatar-img {
+        .avatar-wrapper:hover .avatar-img,
+        .avatar-wrapper:active .avatar-img {
             transform: scale(1.05);
-            filter: contrast(1.1) brightness(1.1);
+            filter: invert(0.85) hue-rotate(180deg) contrast(1.2);
         }
 
         .profile-name {
@@ -251,6 +256,11 @@
             justify-content: center;
             font-size: 1.25rem;
             color: var(--neon-cyan);
+            transition: filter 0.3s ease;
+        }
+
+        .link-card:active .icon-box {
+            filter: invert(1) hue-rotate(180deg);
         }
 
         .link-card.highlight .icon-box {
@@ -355,12 +365,17 @@
             font-size: 0.9rem;
             cursor: pointer;
             text-decoration: none;
+            transition: all 0.3s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
         .action-btn:hover {
             border-color: var(--neon-purple);
             background: rgba(188, 19, 254, 0.15);
+        }
+
+        .action-btn:active {
+            filter: invert(0.8);
         }
 
         .action-btn i {
@@ -387,6 +402,11 @@
         .social-link {
             color: var(--text-muted);
             font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--neon-cyan);
         }
 
         .toast {
@@ -506,6 +526,7 @@
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
                 <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://x.com/ocaioalencar" target="_blank" class="social-link" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
                 <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
             <span>Powered by Caio Alencar • 2026</span>
@@ -571,82 +592,4 @@
                 this.vx = (Math.random() - 0.5) * 0.9;
                 this.vy = (Math.random() - 0.5) * 0.9;
                 
-                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.4 + 0.5;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.fillText(this.text, this.x, this.y);
-                ctx.restore();
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < -40) this.x = width + 40;
-                if (this.x > width + 40) this.x = -40;
-                if (this.y < -40) this.y = height + 40;
-                if (this.y > height + 40) this.y = -40;
-
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= (dx / distance) * force * 3;
-                        this.y -= (dy / distance) * force * 3;
-                    }
-                }
-            }
-        }
-
-        let elementsArray = [];
-        function initElements() {
-            elementsArray = [];
-            const count = Math.floor((width * height) / 12000); 
-            for (let i = 0; i < count; i++) {
-                elementsArray.push(new FloatingElement());
-            }
-        }
-        initElements();
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            for (let i = 0; i < elementsArray.length; i++) {
-                elementsArray[i].update();
-                elementsArray[i].draw();
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // --- COPIAR LINK ---
-        const btnCopy = document.getElementById('btn-copy');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-
-        function showToast(msg) {
-            toastMessage.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        btnCopy.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast('Link do perfil copiado!');
-            }).catch(() => {
-                showToast('Erro ao copiar o link.');
-            });
-        });
-    </script>
-</body>
-</html>
+                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14
