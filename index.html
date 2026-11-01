@@ -11,8 +11,8 @@
     
     <style>
         :root {
-            --bg-color: #08070d;
-            --card-bg: rgba(18, 16, 32, 0.7);
+            --bg-color: #030205; /* Fundo ainda mais escuro */
+            --card-bg: rgba(10, 8, 18, 0.75);
             --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -63,16 +63,16 @@
             pointer-events: none;
             z-index: 2;
             background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
+                rgba(10, 8, 15, 0) 50%, 
+                rgba(0, 0, 0, 0.4) 50%
             ), linear-gradient(
                 90deg,
-                rgba(255, 0, 0, 0.03),
+                rgba(255, 0, 0, 0.02),
                 rgba(0, 255, 0, 0.01),
-                rgba(0, 0, 255, 0.03)
+                rgba(0, 0, 255, 0.02)
             );
             background-size: 100% 4px, 6px 100%;
-            opacity: 0.7;
+            opacity: 0.85;
         }
 
         .main-container {
@@ -99,7 +99,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5),
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
                         inset 0 0 15px rgba(0, 243, 255, 0.05);
             position: relative;
             overflow: hidden;
@@ -143,7 +143,7 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            background-color: #121020;
+            background-color: #030205;
             display: block;
             transition: transform 0.3s ease, filter 0.3s ease;
         }
@@ -216,7 +216,7 @@
 
         .link-card.highlight {
             border-color: var(--neon-purple);
-            background: rgba(30, 16, 48, 0.65);
+            background: rgba(25, 12, 40, 0.75);
         }
 
         .link-left {
@@ -330,7 +330,7 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: rgba(18, 16, 32, 0.95);
+            background: rgba(10, 8, 18, 0.95);
             border: 1px solid var(--neon-cyan);
             box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
             border-radius: 30px;
@@ -430,7 +430,7 @@
     </div>
 
     <script>
-        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS (MAIS BRILHANTE) ---
+        // --- BACKGROUND MAIS ESCURO COM MAIS ÍCONES FLUTUANTES ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -467,20 +467,26 @@
             mouse.y = null;
         });
 
-        const symbols = ['{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', 'root', '01', '</c>', 'sys'];
+        // Lista alargada de símbolos de código e jogos
+        const symbols = [
+            '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', 
+            'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
+            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt'
+        ];
 
         class FloatingElement {
             constructor() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
                 this.text = symbols[Math.floor(Math.random() * symbols.length)];
-                this.fontSize = Math.floor(Math.random() * 6) + 14; // 14px a 20px
-                this.vx = (Math.random() - 0.5) * 0.7;
-                this.vy = (Math.random() - 0.5) * 0.7;
+                this.fontSize = Math.floor(Math.random() * 8) + 12; // 12px a 20px
+                this.vx = (Math.random() - 0.5) * 0.9;
+                this.vy = (Math.random() - 0.5) * 0.9;
                 
-                // Cores e brilhos mais vivos e visíveis
-                this.color = Math.random() > 0.5 ? '#00f3ff' : '#ff007f'; // Cyan neon ou Pink neon
-                this.alpha = Math.random() * 0.4 + 0.5; // Opacidade entre 0.5 e 0.9 (bem visível)
+                // Cores vibrantes neon distribuídas aleatoriamente
+                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.4 + 0.5; // Alta visibilidade
             }
 
             draw() {
@@ -488,7 +494,7 @@
                 ctx.globalAlpha = this.alpha;
                 ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = 12; // Efeito de brilho neon ao redor dos textos/ícones
+                ctx.shadowBlur = 10;
                 ctx.shadowColor = this.color;
                 ctx.fillText(this.text, this.x, this.y);
                 ctx.restore();
@@ -503,7 +509,6 @@
                 if (this.y < -40) this.y = height + 40;
                 if (this.y > height + 40) this.y = -40;
 
-                // Interação suave ao passar o rato ou tocar no telemóvel
                 if (mouse.x && mouse.y) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
@@ -520,7 +525,8 @@
         let elementsArray = [];
         function initElements() {
             elementsArray = [];
-            const count = Math.floor((width * height) / 20000); 
+            // Densidade aumentada de ícones no ecrã (número menor no divisor = mais elementos)
+            const count = Math.floor((width * height) / 12000); 
             for (let i = 0; i < count; i++) {
                 elementsArray.push(new FloatingElement());
             }
