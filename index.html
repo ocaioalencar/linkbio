@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-color: #030205;
-            --card-bg: rgba(10, 8, 18, 0.85);
+            --card-bg: rgba(10, 8, 18, 0.75);
             --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -44,7 +44,6 @@
             position: relative;
         }
 
-        /* Canvas do Background Animado de Código/Jogos */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -55,7 +54,6 @@
             pointer-events: none;
         }
 
-        /* Scanlines Cyberpunk */
         .scanlines {
             position: fixed;
             top: 0;
@@ -86,57 +84,41 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
-        /* --- MOLDURA LED FINA E ROTATIVA APENAS NA CAIXA DE APRESENTAÇÃO --- */
-        .led-profile-box {
-            position: relative;
-            width: 100%;
-            border-radius: 24px;
-            padding: 2px; /* Espessura fina do LED */
-            overflow: hidden;
-            background: rgba(18, 16, 32, 0.5);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
-        }
-
-        .led-profile-box::before {
-            content: '';
-            position: absolute;
-            top: -150%;
-            left: -150%;
-            width: 400%;
-            height: 400%;
-            background: conic-gradient(
-                transparent, 
-                transparent, 
-                transparent, 
-                var(--neon-cyan), 
-                var(--neon-purple), 
-                var(--neon-pink)
-            );
-            animation: rotate-led 6s linear infinite;
-        }
-
-        @keyframes rotate-led {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Conteúdo interno da caixa de apresentação */
-        .profile-content {
-            position: relative;
-            z-index: 2;
+        .profile-card {
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 22px;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
             padding: 28px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
+                        inset 0 0 15px rgba(0, 243, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            animation: scan-line 3s linear infinite;
+        }
+
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .avatar-wrapper {
@@ -208,7 +190,6 @@
             gap: 14px;
         }
 
-        /* Link Cards Padrão */
         .link-card {
             position: relative;
             width: 100%;
@@ -223,17 +204,18 @@
             justify-content: space-between;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
         }
 
         .link-card:hover {
-            transform: translateY(-3px) scale(1.01);
+            transform: translateY(-4px) scale(1.02);
             border-color: var(--neon-cyan);
-            box-shadow: 0 8px 25px -5px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 10px 25px -5px rgba(0, 243, 255, 0.3);
         }
 
         .link-card.highlight {
-            border-color: rgba(188, 19, 254, 0.5);
+            border-color: var(--neon-purple);
             background: rgba(25, 12, 40, 0.75);
         }
 
@@ -286,7 +268,7 @@
             color: var(--text-muted);
         }
 
-        /* X.com Feed Box */
+        /* X.com Feed Box Styles */
         .x-feed-card {
             width: 100%;
             background: var(--card-bg);
@@ -299,11 +281,6 @@
             flex-direction: column;
             gap: 12px;
             color: var(--text-main);
-            transition: all 0.3s ease;
-        }
-
-        .x-feed-card:hover {
-            border-color: rgba(0, 243, 255, 0.4);
         }
 
         .x-header {
@@ -341,6 +318,279 @@
         }
 
         .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .action-btn {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-main);
+            font-family: var(--font-sub);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .action-btn:hover {
+            border-color: var(--neon-purple);
+            background: rgba(188, 19, 254, 0.15);
+        }
+
+        .action-btn i {
+            color: var(--neon-purple);
+        }
+
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-family: var(--font-code);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .social-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-link {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(10, 8, 18, 0.95);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            border-radius: 30px;
+            padding: 10px 24px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+    <div class="scanlines"></div>
+
+    <main class="main-container">
+        <section class="profile-card">
+            <div class="avatar-wrapper">
+                <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+            </div>
+            
+            <h1 class="profile-name">CAIO ALENCAR</h1>
+            <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
+            <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
+        </section>
+
+        <!-- Links e Widget do X -->
+        <section class="links-container">
+            <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-github"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">GitHub</span>
+                        <span class="link-subtitle">@ocaioalencar</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
+
+            <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">Instagram</span>
+                        <span class="link-subtitle">@ocaioalencar</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
+
+            <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-left">
+                    <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
+                    <div class="link-info">
+                        <span class="link-title">Facebook</span>
+                        <span class="link-subtitle">@ocaioalencar1</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
+
+            <!-- Caixa com o Widget Oficial do X contendo o tweet real fornecido -->
+            <div class="x-feed-card">
+                <div class="x-header">
+                    <div class="x-header-left">
+                        <i class="fa-brands fa-x-twitter"></i>
+                        <span>Último Tweet</span>
+                    </div>
+                    <a href="https://x.com/ocaioalencar/status/1951077525263651112?a=0ZyClS5l9ac7kJRbaeI&s=19" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
+                </div>
+                
+                <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
+                    <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
+                        <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
+                    </blockquote>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                </div>
+            </div>
+        </section>
+
+        <section class="actions-grid">
+            <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
+                <i class="fa-solid fa-envelope"></i> E-mail
+            </a>
+            <button class="action-btn" id="btn-copy">
+                <i class="fa-solid fa-link"></i> Copiar Link
+            </button>
+        </section>
+
+        <footer class="footer">
+            <div class="social-row">
+                <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+            <span>Powered by Caio Alencar • 2026</span>
+        </footer>
+    </main>
+
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan);"></i>
+        <span id="toast-message">Link copiado com sucesso!</span>
+    </div>
+
+    <script>
+        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initElements();
+        });
+
+        const mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        const symbols = [
+            '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', '👾', '🎧',
+            'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
+            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt'
+        ];
+
+        class FloatingElement {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.text = symbols[Math.floor(Math.random() * symbols.length)];
+                this.fontSize = Math.floor(Math.random() * 8) + 12;
+                this.vx = (Math.random() - 0.5) * 0.9;
+                this.vy = (Math.random() - 0.5) * 0.9;
+                
+                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.4 + 0.5;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < -40) this.x = width + 40;
+                if (this.x > width + 40) this.x = -40;
+                if (this.y < -40) this.y = height + 40;
+                if (this.y > height + 40) this.y = -40;
+
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        this.x -= (dx / distance) * force * 3;
+                        this.y -= (dy / distance) * force * 3;
+                    }
+                }
+            }
+        }
+
+        let elementsArray = [];
+        function initElements() {
+            elementsArray {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
