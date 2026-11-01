@@ -77,7 +77,7 @@
             gap: 16px;
         }
 
-        /* --- MOLDURA LED 100% SINCRONIZADA EM TAMANHO REAL --- */
+        /* --- MOLDURA LED FINA E 100% SINCRONIZADA --- */
         .led-box {
             position: relative;
             width: 100%;
@@ -102,17 +102,16 @@
         .led-bg-line {
             fill: none;
             stroke: rgba(0, 243, 255, 0.1);
-            stroke-width: 2.5;
+            stroke-width: 1.2;
         }
 
         .led-anim-line {
             fill: none;
             stroke: url(#led-grad);
-            stroke-width: 3.5;
-            stroke-dasharray: 25 75; /* 25% do feixe de LED em movimento */
+            stroke-width: 2; /* LED mais fino e refinado */
+            stroke-dasharray: 25 75; 
             stroke-linecap: round;
-            filter: drop-shadow(0 0 6px #00f3ff);
-            /* Todos partilham exatamente a mesma duração e curva ease-in-out */
+            filter: drop-shadow(0 0 4px #00f3ff); /* Brilho ajustado para o traço fino */
             animation: led-travel 8s ease-in-out infinite;
         }
 
@@ -139,7 +138,7 @@
             -webkit-backdrop-filter: blur(16px);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(0, 243, 255, 0.2);
+            border: 1px solid rgba(0, 243, 255, 0.15);
         }
 
         /* Profile Header */
@@ -555,36 +554,3 @@
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
                 <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
-            </div>
-            <span>Powered by Caio Alencar • 2026</span>
-        </footer>
-    </main>
-
-    <div class="toast" id="toast">
-        <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan);"></i>
-        <span id="toast-message">Link copiado com sucesso!</span>
-    </div>
-
-    <script>
-        // --- COPIAR LINK ---
-        const btnCopy = document.getElementById('btn-copy');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-
-        function showToast(msg) {
-            toastMessage.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        btnCopy.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast('Link do perfil copiado!');
-            }).catch(() => {
-                showToast('Erro ao copiar o link.');
-            });
-        });
-    </script>
-</body>
-</html>
