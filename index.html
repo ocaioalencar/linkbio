@@ -77,12 +77,12 @@
             gap: 16px;
         }
 
-        /* --- PADRÃO DE MOLDURA LED ROTATIVO PARA OS BLOCOS --- */
+        /* --- MOLDURA LED UNIFICADA, SINCRONIZADA E MAIS LENTA (8 segundos) --- */
         .led-box {
             position: relative;
             width: 100%;
             border-radius: 22px;
-            padding: 2px; /* Espessura da borda de LED */
+            padding: 2px;
             overflow: hidden;
             background: rgba(18, 16, 32, 0.5);
             transition: transform 0.3s ease;
@@ -91,19 +91,21 @@
         .led-box::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -150%;
+            left: -150%;
+            width: 400%;
+            height: 400%;
             background: conic-gradient(
                 transparent, 
                 transparent, 
                 transparent, 
                 var(--neon-cyan), 
                 var(--neon-purple), 
-                var(--neon-pink)
+                var(--neon-pink),
+                transparent
             );
-            animation: rotate-led 4s linear infinite;
+            /* animation-duration alterado para 8s para ficar bem mais lento e suave */
+            animation: rotate-led 8s linear infinite;
         }
 
         @keyframes rotate-led {
@@ -390,7 +392,7 @@
 <body>
 
     <main class="main-container">
-        <!-- 1. Caixa de Apresentação com LED rotativo -->
+        <!-- 1. Caixa de Apresentação com LED rotativo sincronizado -->
         <div class="led-box">
             <div class="led-content">
                 <section class="profile-card">
@@ -406,7 +408,7 @@
         </div>
 
         <section class="links-container">
-            <!-- 2. Botão GitHub com LED rotativo -->
+            <!-- 2. Botão GitHub com LED rotativo sincronizado -->
             <div class="led-box">
                 <div class="led-content">
                     <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
@@ -422,7 +424,7 @@
                 </div>
             </div>
 
-            <!-- 3. Botão Instagram com LED rotativo -->
+            <!-- 3. Botão Instagram com LED rotativo sincronizado -->
             <div class="led-box">
                 <div class="led-content">
                     <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
@@ -438,7 +440,7 @@
                 </div>
             </div>
 
-            <!-- 4. Botão Facebook com LED rotativo -->
+            <!-- 4. Botão Facebook com LED rotativo sincronizado -->
             <div class="led-box">
                 <div class="led-content">
                     <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
@@ -454,7 +456,7 @@
                 </div>
             </div>
 
-            <!-- 5. Caixa do Tweet do X com LED rotativo -->
+            <!-- 5. Caixa do Tweet do X com LED rotativo sincronizado -->
             <div class="led-box">
                 <div class="led-content">
                     <div class="x-feed-card">
@@ -477,7 +479,7 @@
             </div>
         </section>
 
-        <!-- 6. Grid de Ações Rápidas (E-mail e Copiar Link) com LED rotativo individual -->
+        <!-- 6. Grid de Ações Rápidas (E-mail e Copiar Link) com LED rotativo sincronizado -->
         <section class="actions-grid">
             <div class="led-box">
                 <div class="led-content">
