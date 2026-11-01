@@ -193,65 +193,6 @@
             max-width: 320px;
         }
 
-        .audio-player-widget {
-            margin-top: 16px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(188, 19, 254, 0.3);
-            border-radius: 30px;
-            padding: 8px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .audio-player-widget:hover {
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
-        }
-
-        .audio-btn {
-            color: var(--neon-cyan);
-            font-size: 0.9rem;
-        }
-
-        .eq-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 14px;
-        }
-
-        .bar {
-            width: 3px;
-            height: 100%;
-            background: var(--neon-purple);
-            border-radius: 2px;
-            transform-origin: bottom;
-        }
-
-        .playing .bar {
-            animation: eq-bounce 0.8s ease-in-out infinite alternate;
-        }
-
-        .playing .bar:nth-child(1) { animation-delay: 0.1s; }
-        .playing .bar:nth-child(2) { animation-delay: 0.4s; }
-        .playing .bar:nth-child(3) { animation-delay: 0.2s; }
-        .playing .bar:nth-child(4) { animation-delay: 0.5s; }
-
-        @keyframes eq-bounce {
-            0% { transform: scaleY(0.2); }
-            100% { transform: scaleY(1); }
-        }
-
-        .audio-text {
-            font-family: var(--font-code);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
         .links-container {
             width: 100%;
             display: flex;
@@ -427,11 +368,6 @@
     <canvas id="bg-canvas"></canvas>
     <div class="scanlines"></div>
 
-    <!-- Elemento de áudio configurado para music.mp3 -->
-    <audio id="cyber-audio" loop preload="auto">
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
-
     <main class="main-container">
         <section class="profile-card">
             <div class="avatar-wrapper">
@@ -442,17 +378,6 @@
             <h1 class="profile-name">CAIO ALENCAR</h1>
             <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
             <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
-
-            <div class="audio-player-widget" id="audio-toggle" title="Ligar/Desligar som">
-                <i class="fa-solid fa-play audio-btn" id="audio-icon"></i>
-                <div class="eq-bars" id="eq-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-                <span class="audio-text" id="audio-status">CYBER_AUDIO: OFF</span>
-            </div>
         </section>
 
         <section class="links-container">
@@ -596,4 +521,40 @@
 
         const avatarCanvas = document.getElementById('avatar-pixels');
         const actx = avatarCanvas.getContext('2d');
-        avatarCanvas.width = 1
+        avatarCanvas.width = 160;
+        avatarCanvas.height = 160;
+        let pixelAngle = 0;
+        function drawAvatarPixels() {
+            actx.clearRect(0, 0, 160, 160);
+            for (let i = 0; i < 8; i++) {
+                let currentAngle = pixelAngle + (i * Math.PI / 4);
+                let px = 80 + Math.cos(currentAngle) * 68;
+                let py = 80 + Math.sin(currentAngle) * 68;
+                actx.fillStyle = i % 2 === 0 ? '#00f3ff' : '#ff007f';
+                actx.fillRect(px - 3, py - 3, 6, 6);
+            }
+            pixelAngle += 0.02;
+            requestAnimationFrame(drawAvatarPixels);
+        }
+        drawAvatarPixels();
+
+        const btnCopy = document.getElementById('btn-copy');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        function showToast(msg) {
+            toastMessage.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link do perfil copiado!');
+            }).catch(() => {
+                showToast('Erro ao copiar o link.');
+            });
+        });
+    </script>
+</body>
+</html>
