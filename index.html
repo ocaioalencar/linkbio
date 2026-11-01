@@ -276,7 +276,7 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 18px 20px;
+            padding: 16px 18px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -288,21 +288,21 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .x-header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-family: var(--font-head);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
         }
 
         .x-header-left i {
             color: var(--text-main);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .x-handle {
@@ -315,36 +315,6 @@
 
         .x-handle:hover {
             color: var(--neon-pink);
-        }
-
-        .tweet-item {
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px 14px;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: border-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .tweet-item:hover {
-            border-color: rgba(0, 243, 255, 0.4);
-        }
-
-        .tweet-text {
-            line-height: 1.4;
-            color: #d1d5db;
-        }
-
-        .tweet-time {
-            font-family: var(--font-code);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            align-self: flex-end;
         }
 
         .actions-grid {
@@ -448,7 +418,7 @@
             <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
         </section>
 
-        <!-- Links e Feed do X -->
+        <!-- Links e Widget do X -->
         <section class="links-container">
             <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
                 <div class="link-left">
@@ -483,27 +453,22 @@
                 <i class="fa-solid fa-chevron-right arrow-icon"></i>
             </a>
 
-            <!-- Caixa de Tweets do X.com logo após o Facebook -->
+            <!-- Caixa com o Widget Oficial do X contendo o tweet real fornecido -->
             <div class="x-feed-card">
                 <div class="x-header">
                     <div class="x-header-left">
                         <i class="fa-brands fa-x-twitter"></i>
-                        <span>Últimos Tweets</span>
+                        <span>Último Tweet</span>
                     </div>
                     <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
                 </div>
                 
-                <!-- Tweet 1 -->
-                <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="tweet-item">
-                    <p class="tweet-text">Desenvolvendo automações e estruturando novas camadas de segurança web. O código não para! 🛡️⚡</p>
-                    <span class="tweet-time">Hoje</span>
-                </a>
-
-                <!-- Tweet 2 -->
-                <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="tweet-item">
-                    <p class="tweet-text">Foco total em projetos de desenvolvimento e cibersegurança. Rumo ao próximo nível. 🚀💻</p>
-                    <span class="tweet-time">Ontem</span>
-                </a>
+                <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
+                    <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
+                        <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
+                    </blockquote>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                </div>
             </div>
         </section>
 
@@ -602,4 +567,28 @@
             }
 
             update() {
-       
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < -40) this.x = width + 40;
+                if (this.x > width + 40) this.x = -40;
+                if (this.y < -40) this.y = height + 40;
+                if (this.y > height + 40) this.y = -40;
+
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        this.x -= (dx / distance) * force * 3;
+                        this.y -= (dy / distance) * force * 3;
+                    }
+                }
+            }
+        }
+
+        let elementsArray = [];
+        function initElements() {
+            elementsArray = [];
+            const count = Math.floor((width * height) / 120
