@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-color: #030205;
-            --card-bg: rgba(10, 8, 18, 0.75);
+            --card-bg: rgba(10, 8, 18, 0.85);
             --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -87,38 +87,53 @@
             gap: 20px;
         }
 
-        .profile-card {
+        /* Moldura com LED fino girando apenas na caixa de apresentação */
+        .led-profile-box {
+            position: relative;
+            width: 100%;
+            border-radius: 24px;
+            padding: 2px;
+            overflow: hidden;
+            background: rgba(18, 16, 32, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+        }
+
+        .led-profile-box::before {
+            content: '';
+            position: absolute;
+            top: -150%;
+            left: -150%;
+            width: 400%;
+            height: 400%;
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                var(--neon-cyan), 
+                var(--neon-purple), 
+                var(--neon-pink)
+            );
+            animation: rotate-led 6s linear infinite;
+        }
+
+        @keyframes rotate-led {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-content {
+            position: relative;
+            z-index: 2;
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
+            border-radius: 22px;
             padding: 28px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
-                        inset 0 0 15px rgba(0, 243, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
-            animation: scan-line 3s linear infinite;
-        }
-
-        @keyframes scan-line {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .avatar-wrapper {
@@ -408,15 +423,20 @@
     <div class="scanlines"></div>
 
     <main class="main-container">
-        <section class="profile-card">
-            <div class="avatar-wrapper">
-                <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+        <!-- Caixa de Apresentação com o LED fino girando -->
+        <div class="led-profile-box">
+            <div class="profile-content">
+                <section class="profile-card" style="width: 100%; border: none; background: transparent; box-shadow: none; padding: 0;">
+                    <div class="avatar-wrapper">
+                        <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+                    </div>
+                    
+                    <h1 class="profile-name">CAIO ALENCAR</h1>
+                    <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
+                    <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
+                </section>
             </div>
-            
-            <h1 class="profile-name">CAIO ALENCAR</h1>
-            <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
-            <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
-        </section>
+        </div>
 
         <!-- Links e Widget do X -->
         <section class="links-container">
@@ -498,7 +518,7 @@
     </div>
 
     <script>
-        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS ---
+        // --- BACKGROUND FLUTUANTE DE CÓDIGOS, JOGOS E EMOJIS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -538,7 +558,8 @@
         const symbols = [
             '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', '👾', '🎧',
             'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
-            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt'
+            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt',
+            '🚀', '🔥', '🔒', '💡', '🤖', '✨'
         ];
 
         class FloatingElement {
@@ -591,4 +612,41 @@
         let elementsArray = [];
         function initElements() {
             elementsArray = [];
-            const count = Math.floor((width * height) / 120
+            const count = Math.floor((width * height) / 12000); 
+            for (let i = 0; i < count; i++) {
+                elementsArray.push(new FloatingElement());
+            }
+        }
+        initElements();
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < elementsArray.length; i++) {
+                elementsArray[i].update();
+                elementsArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- COPIAR LINK ---
+        const btnCopy = document.getElementById('btn-copy');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        function showToast(msg) {
+            toastMessage.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link do perfil copiado!');
+            }).catch(() => {
+                showToast('Erro ao copiar o link.');
+            });
+        });
+    </script>
+</body>
+</html>
