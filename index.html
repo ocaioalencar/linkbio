@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-color: #08070d;
-            --card-bg: rgba(18, 16, 32, 0.65);
+            --card-bg: rgba(18, 16, 32, 0.7);
             --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -151,16 +151,6 @@
         .avatar-wrapper:hover .avatar-img {
             transform: scale(1.05);
             filter: contrast(1.1) brightness(1.1);
-        }
-
-        #avatar-pixels {
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 160px;
-            height: 160px;
-            pointer-events: none;
-            z-index: 12;
         }
 
         .profile-name {
@@ -371,7 +361,6 @@
     <main class="main-container">
         <section class="profile-card">
             <div class="avatar-wrapper">
-                <canvas id="avatar-pixels"></canvas>
                 <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
             </div>
             
@@ -441,6 +430,7 @@
     </div>
 
     <script>
+        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -450,94 +440,98 @@
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            initParticles();
+            initElements();
         });
 
-        const mouse = { x: null, y: null, radius: 140 };
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-        window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+        const mouse = { x: null, y: null, radius: 150 };
 
-        class Particle {
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Símbolos de código e ícones de jogos em texto
+        const symbols = ['{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', 'root', '01', '</c>', 'sys'];
+
+        class FloatingElement {
             constructor() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.size = Math.random() * 2 + 1;
-                this.vx = (Math.random() - 0.5) * 0.6;
-                this.vy = (Math.random() - 0.5) * 0.6;
-                this.color = Math.random() > 0.5 ? '#00f3ff' : '#bc13fe';
+                this.text = symbols[Math.floor(Math.random() * symbols.length)];
+                this.fontSize = Math.floor(Math.random() * 8) + 12; // 12px a 20px
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.color = Math.random() > 0.5 ? 'rgba(0, 243, 255, 0.25)' : 'rgba(188, 19, 254, 0.25)';
             }
+
             draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.font = `${this.fontSize}px 'Fira Code', monospace`;
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = this.color;
-                ctx.fill();
+                ctx.fillText(this.text, this.x, this.y);
             }
+
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-        }
 
-        let particlesArray = [];
-        function initParticles() {
-            particlesArray = [];
-            const numberOfParticles = Math.floor((width * height) / 10000);
-            for (let i = 0; i < numberOfParticles; i++) particlesArray.push(new Particle());
-        }
-        initParticles();
+                // Reposiciona nas bordas
+                if (this.x < -30) this.x = width + 30;
+                if (this.x > width + 30) this.x = -30;
+                if (this.y < -30) this.y = height + 30;
+                if (this.y > height + 30) this.y = -30;
 
-        function connectParticles() {
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let dx = particlesArray[a].x - particlesArray[b].x;
-                    let dy = particlesArray[a].y - particlesArray[b].y;
+                // Interação com o rato ou toque no telemóvel
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) {
-                        ctx.strokeStyle = `rgba(0, 243, 255, ${(1 - (distance / 100)) * 0.2})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
+                    if (distance < mouse.radius) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        this.x -= (dx / distance) * force * 2;
+                        this.y -= (dy / distance) * force * 2;
                     }
                 }
             }
         }
 
+        let elementsArray = [];
+        function initElements() {
+            elementsArray = [];
+            const count = Math.floor((width * height) / 18000); // Quantidade responsiva
+            for (let i = 0; i < count; i++) {
+                elementsArray.push(new FloatingElement());
+            }
+        }
+        initElements();
+
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
+            for (let i = 0; i < elementsArray.length; i++) {
+                elementsArray[i].update();
+                elementsArray[i].draw();
             }
-            connectParticles();
             requestAnimationFrame(animate);
         }
         animate();
 
-        const avatarCanvas = document.getElementById('avatar-pixels');
-        const actx = avatarCanvas.getContext('2d');
-        avatarCanvas.width = 160;
-        avatarCanvas.height = 160;
-        let pixelAngle = 0;
-        function drawAvatarPixels() {
-            actx.clearRect(0, 0, 160, 160);
-            for (let i = 0; i < 8; i++) {
-                let currentAngle = pixelAngle + (i * Math.PI / 4);
-                let px = 80 + Math.cos(currentAngle) * 68;
-                let py = 80 + Math.sin(currentAngle) * 68;
-                actx.fillStyle = i % 2 === 0 ? '#00f3ff' : '#ff007f';
-                actx.fillRect(px - 3, py - 3, 6, 6);
-            }
-            pixelAngle += 0.02;
-            requestAnimationFrame(drawAvatarPixels);
-        }
-        drawAvatarPixels();
-
+        // --- COPIAR LINK ---
         const btnCopy = document.getElementById('btn-copy');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
