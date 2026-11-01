@@ -430,7 +430,7 @@
     </div>
 
     <script>
-        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS ---
+        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS (MAIS BRILHANTE) ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -467,7 +467,6 @@
             mouse.y = null;
         });
 
-        // Símbolos de código e ícones de jogos em texto
         const symbols = ['{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', 'root', '01', '</c>', 'sys'];
 
         class FloatingElement {
@@ -475,37 +474,44 @@
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
                 this.text = symbols[Math.floor(Math.random() * symbols.length)];
-                this.fontSize = Math.floor(Math.random() * 8) + 12; // 12px a 20px
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = (Math.random() - 0.5) * 0.8;
-                this.color = Math.random() > 0.5 ? 'rgba(0, 243, 255, 0.25)' : 'rgba(188, 19, 254, 0.25)';
+                this.fontSize = Math.floor(Math.random() * 6) + 14; // 14px a 20px
+                this.vx = (Math.random() - 0.5) * 0.7;
+                this.vy = (Math.random() - 0.5) * 0.7;
+                
+                // Cores e brilhos mais vivos e visíveis
+                this.color = Math.random() > 0.5 ? '#00f3ff' : '#ff007f'; // Cyan neon ou Pink neon
+                this.alpha = Math.random() * 0.4 + 0.5; // Opacidade entre 0.5 e 0.9 (bem visível)
             }
 
             draw() {
-                ctx.font = `${this.fontSize}px 'Fira Code', monospace`;
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
                 ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12; // Efeito de brilho neon ao redor dos textos/ícones
+                ctx.shadowColor = this.color;
                 ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
             }
 
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Reposiciona nas bordas
-                if (this.x < -30) this.x = width + 30;
-                if (this.x > width + 30) this.x = -30;
-                if (this.y < -30) this.y = height + 30;
-                if (this.y > height + 30) this.y = -30;
+                if (this.x < -40) this.x = width + 40;
+                if (this.x > width + 40) this.x = -40;
+                if (this.y < -40) this.y = height + 40;
+                if (this.y > height + 40) this.y = -40;
 
-                // Interação com o rato ou toque no telemóvel
+                // Interação suave ao passar o rato ou tocar no telemóvel
                 if (mouse.x && mouse.y) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
                     if (distance < mouse.radius) {
                         const force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= (dx / distance) * force * 2;
-                        this.y -= (dy / distance) * force * 2;
+                        this.x -= (dx / distance) * force * 3;
+                        this.y -= (dy / distance) * force * 3;
                     }
                 }
             }
@@ -514,7 +520,7 @@
         let elementsArray = [];
         function initElements() {
             elementsArray = [];
-            const count = Math.floor((width * height) / 18000); // Quantidade responsiva
+            const count = Math.floor((width * height) / 20000); 
             for (let i = 0; i < count; i++) {
                 elementsArray.push(new FloatingElement());
             }
