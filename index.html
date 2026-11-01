@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-color: #030205;
-            --card-bg: rgba(10, 8, 18, 0.75);
+            --card-bg: rgba(10, 8, 18, 0.85);
             --card-border: rgba(0, 243, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -44,16 +44,7 @@
             position: relative;
         }
 
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
+        /* Scanlines Cyberpunk */
         .scanlines {
             position: fixed;
             top: 0;
@@ -87,13 +78,61 @@
             gap: 20px;
         }
 
+        /* Enquadramento Geral com o LED a dar a volta completa em todos os elementos */
+        .led-border-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 26px;
+            padding: 3px; /* Espessura da borda de LED */
+            overflow: hidden;
+            background: rgba(18, 16, 32, 0.4);
+        }
+
+        /* Animação do LED a dar a volta completa pelo perímetro exterior */
+        .led-border-wrapper::before {
+            content: '';
+            position: absolute;
+            /* Dimensões ampliadas para cobrir perfeitamente o container */
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                var(--neon-cyan), 
+                var(--neon-purple), 
+                var(--neon-pink)
+            );
+            animation: rotate-led 5s linear infinite;
+        }
+
+        @keyframes rotate-led {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Inner container que esconde o excesso do gradiente e mantém o conteúdo alinhado */
+        .content-group {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            background: var(--bg-color);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 2px;
+        }
+
+        /* Profile Header */
         .profile-card {
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
+            border-radius: 22px;
             padding: 28px 20px;
             display: flex;
             flex-direction: column;
@@ -101,24 +140,6 @@
             text-align: center;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
                         inset 0 0 15px rgba(0, 243, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
-            animation: scan-line 3s linear infinite;
-        }
-
-        @keyframes scan-line {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .avatar-wrapper {
@@ -404,82 +425,85 @@
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
     <div class="scanlines"></div>
 
     <main class="main-container">
-        <section class="profile-card">
-            <div class="avatar-wrapper">
-                <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+        <!-- Moldura com o LED sincronizado a dar a volta completa em todos os blocos e botões -->
+        <div class="led-border-wrapper">
+            <div class="content-group">
+                <section class="profile-card">
+                    <div class="avatar-wrapper">
+                        <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+                    </div>
+                    
+                    <h1 class="profile-name">CAIO ALENCAR</h1>
+                    <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
+                    <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
+                </section>
+
+                <section class="links-container">
+                    <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
+                        <div class="link-left">
+                            <div class="icon-box"><i class="fa-brands fa-github"></i></div>
+                            <div class="link-info">
+                                <span class="link-title">GitHub</span>
+                                <span class="link-subtitle">@ocaioalencar</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </a>
+
+                    <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-left">
+                            <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
+                            <div class="link-info">
+                                <span class="link-title">Instagram</span>
+                                <span class="link-subtitle">@ocaioalencar</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </a>
+
+                    <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-left">
+                            <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
+                            <div class="link-info">
+                                <span class="link-title">Facebook</span>
+                                <span class="link-subtitle">@ocaioalencar1</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                    </a>
+
+                    <!-- Caixa do Tweet Real Atualizada -->
+                    <div class="x-feed-card">
+                        <div class="x-header">
+                            <div class="x-header-left">
+                                <i class="fa-brands fa-x-twitter"></i>
+                                <span>Último Tweet</span>
+                            </div>
+                            <a href="https://x.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
+                            <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
+                                <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
+                            </blockquote>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="actions-grid">
+                    <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
+                        <i class="fa-solid fa-envelope"></i> E-mail
+                    </a>
+                    <button class="action-btn" id="btn-copy">
+                        <i class="fa-solid fa-link"></i> Copiar Link
+                    </button>
+                </section>
             </div>
-            
-            <h1 class="profile-name">CAIO ALENCAR</h1>
-            <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
-            <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
-        </section>
-
-        <!-- Links e Widget do X -->
-        <section class="links-container">
-            <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
-                <div class="link-left">
-                    <div class="icon-box"><i class="fa-brands fa-github"></i></div>
-                    <div class="link-info">
-                        <span class="link-title">GitHub</span>
-                        <span class="link-subtitle">@ocaioalencar</span>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
-                <div class="link-left">
-                    <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
-                    <div class="link-info">
-                        <span class="link-title">Instagram</span>
-                        <span class="link-subtitle">@ocaioalencar</span>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
-                <div class="link-left">
-                    <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
-                    <div class="link-info">
-                        <span class="link-title">Facebook</span>
-                        <span class="link-subtitle">@ocaioalencar1</span>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- Caixa com o Widget Oficial do X contendo o tweet real fornecido -->
-            <div class="x-feed-card">
-                <div class="x-header">
-                    <div class="x-header-left">
-                        <i class="fa-brands fa-x-twitter"></i>
-                        <span>Último Tweet</span>
-                    </div>
-                    <a href="https://x.com/ocaioalencar/status/1951077525263651112?a=0ZyClS5l9ac7kJRbaeI&s=19" target="_blank" rel="noopener noreferrer" class="x-handle">@ocaioalencar</a>
-                </div>
-                
-                <div style="display: flex; justify-content: center; overflow: hidden; border-radius: 12px; width: 100%;">
-                    <blockquote class="twitter-tweet" data-theme="dark" data-conversation="none" data-dnt="true" style="width: 100%; margin: 0;">
-                        <a href="https://x.com/ocaioalencar/status/1951077525263651112?ref_src=twsrc%5Etfw"></a>
-                    </blockquote>
-                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                </div>
-            </div>
-        </section>
-
-        <section class="actions-grid">
-            <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
-                <i class="fa-solid fa-envelope"></i> E-mail
-            </a>
-            <button class="action-btn" id="btn-copy">
-                <i class="fa-solid fa-link"></i> Copiar Link
-            </button>
-        </section>
+        </div>
 
         <footer class="footer">
             <div class="social-row">
@@ -498,97 +522,24 @@
     </div>
 
     <script>
-        // --- BACKGROUND FLUTUANTE DE CÓDIGOS E JOGOS ---
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
+        // --- COPIAR LINK ---
+        const btnCopy = document.getElementById('btn-copy');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            initElements();
-        });
-
-        const mouse = { x: null, y: null, radius: 150 };
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouse.x = e.touches[0].clientX;
-                mouse.y = e.touches[0].clientY;
-            }
-        });
-
-        window.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        window.addEventListener('touchend', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        const symbols = [
-            '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', '👾', '🎧',
-            'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
-            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt'
-        ];
-
-        class FloatingElement {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.text = symbols[Math.floor(Math.random() * symbols.length)];
-                this.fontSize = Math.floor(Math.random() * 8) + 12;
-                this.vx = (Math.random() - 0.5) * 0.9;
-                this.vy = (Math.random() - 0.5) * 0.9;
-                
-                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.4 + 0.5;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.fillText(this.text, this.x, this.y);
-                ctx.restore();
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < -40) this.x = width + 40;
-                if (this.x > width + 40) this.x = -40;
-                if (this.y < -40) this.y = height + 40;
-                if (this.y > height + 40) this.y = -40;
-
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= (dx / distance) * force * 3;
-                        this.y -= (dy / distance) * force * 3;
-                    }
-                }
-            }
+        function showToast(msg) {
+            toastMessage.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        let elementsArray = [];
-        function initElements() {
-            elementsArray = [];
-            const count = Math.floor((width * height) / 120
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link do perfil copiado!');
+            }).catch(() => {
+                showToast('Erro ao copiar o link.');
+            });
+        });
+    </script>
+</body>
+</html>
