@@ -12,8 +12,7 @@
     <style>
         :root {
             --bg-color: #030205;
-            --card-bg: rgba(10, 8, 18, 0.85);
-            --card-border: rgba(0, 243, 255, 0.2);
+            --card-bg: rgba(10, 8, 18, 0.9);
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
             --neon-pink: #ff007f;
@@ -75,24 +74,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
-        /* Enquadramento Geral com o LED a dar a volta completa em todos os elementos */
-        .led-border-wrapper {
+        /* --- PADRÃO DE MOLDURA LED ROTATIVO PARA OS BLOCOS --- */
+        .led-box {
             position: relative;
             width: 100%;
-            border-radius: 26px;
-            padding: 3px; /* Espessura da borda de LED */
+            border-radius: 22px;
+            padding: 2px; /* Espessura da borda de LED */
             overflow: hidden;
-            background: rgba(18, 16, 32, 0.4);
+            background: rgba(18, 16, 32, 0.5);
+            transition: transform 0.3s ease;
         }
 
-        /* Animação do LED a dar a volta completa pelo perímetro exterior */
-        .led-border-wrapper::before {
+        .led-box::before {
             content: '';
             position: absolute;
-            /* Dimensões ampliadas para cobrir perfeitamente o container */
             top: -50%;
             left: -50%;
             width: 200%;
@@ -105,7 +103,7 @@
                 var(--neon-purple), 
                 var(--neon-pink)
             );
-            animation: rotate-led 5s linear infinite;
+            animation: rotate-led 4s linear infinite;
         }
 
         @keyframes rotate-led {
@@ -113,33 +111,30 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Inner container que esconde o excesso do gradiente e mantém o conteúdo alinhado */
-        .content-group {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            background: var(--bg-color);
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 2px;
+        .led-box:hover {
+            transform: translateY(-3px) scale(1.01);
         }
 
-        /* Profile Header */
-        .profile-card {
+        /* Conteúdo interno dos blocos */
+        .led-content {
+            position: relative;
+            z-index: 2;
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 22px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        /* Profile Header */
+        .profile-card {
             padding: 28px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
-                        inset 0 0 15px rgba(0, 243, 255, 0.05);
+            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05);
         }
 
         .avatar-wrapper {
@@ -211,33 +206,15 @@
             gap: 14px;
         }
 
+        /* Link Cards */
         .link-card {
-            position: relative;
             width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-        }
-
-        .link-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 10px 25px -5px rgba(0, 243, 255, 0.3);
-        }
-
-        .link-card.highlight {
-            border-color: var(--neon-purple);
-            background: rgba(25, 12, 40, 0.75);
         }
 
         .link-left {
@@ -289,14 +266,9 @@
             color: var(--text-muted);
         }
 
-        /* X.com Feed Box Styles */
+        /* X.com Feed Box */
         .x-feed-card {
             width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
             padding: 16px 18px;
             display: flex;
             flex-direction: column;
@@ -341,16 +313,13 @@
         .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
             width: 100%;
         }
 
         .action-btn {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 12px;
+            width: 100%;
+            padding: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -362,11 +331,6 @@
             cursor: pointer;
             text-decoration: none;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        .action-btn:hover {
-            border-color: var(--neon-purple);
-            background: rgba(188, 19, 254, 0.15);
         }
 
         .action-btn i {
@@ -425,12 +389,10 @@
 </head>
 <body>
 
-    <div class="scanlines"></div>
-
     <main class="main-container">
-        <!-- Moldura com o LED sincronizado a dar a volta completa em todos os blocos e botões -->
-        <div class="led-border-wrapper">
-            <div class="content-group">
+        <!-- 1. Caixa de Apresentação com LED rotativo -->
+        <div class="led-box">
+            <div class="led-content">
                 <section class="profile-card">
                     <div class="avatar-wrapper">
                         <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
@@ -440,8 +402,13 @@
                     <span class="profile-tag">&lt;CyberSecurity & Developer/&gt;</span>
                     <p class="profile-bio">Criando experiências digitais interativas, automações e soluções de segurança web.</p>
                 </section>
+            </div>
+        </div>
 
-                <section class="links-container">
+        <section class="links-container">
+            <!-- 2. Botão GitHub com LED rotativo -->
+            <div class="led-box">
+                <div class="led-content">
                     <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
                         <div class="link-left">
                             <div class="icon-box"><i class="fa-brands fa-github"></i></div>
@@ -452,7 +419,12 @@
                         </div>
                         <i class="fa-solid fa-chevron-right arrow-icon"></i>
                     </a>
+                </div>
+            </div>
 
+            <!-- 3. Botão Instagram com LED rotativo -->
+            <div class="led-box">
+                <div class="led-content">
                     <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
                         <div class="link-left">
                             <div class="icon-box"><i class="fa-brands fa-instagram"></i></div>
@@ -463,7 +435,12 @@
                         </div>
                         <i class="fa-solid fa-chevron-right arrow-icon"></i>
                     </a>
+                </div>
+            </div>
 
+            <!-- 4. Botão Facebook com LED rotativo -->
+            <div class="led-box">
+                <div class="led-content">
                     <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
                         <div class="link-left">
                             <div class="icon-box"><i class="fa-brands fa-facebook"></i></div>
@@ -474,8 +451,12 @@
                         </div>
                         <i class="fa-solid fa-chevron-right arrow-icon"></i>
                     </a>
+                </div>
+            </div>
 
-                    <!-- Caixa do Tweet Real Atualizada -->
+            <!-- 5. Caixa do Tweet do X com LED rotativo -->
+            <div class="led-box">
+                <div class="led-content">
                     <div class="x-feed-card">
                         <div class="x-header">
                             <div class="x-header-left">
@@ -492,18 +473,28 @@
                             <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                         </div>
                     </div>
-                </section>
+                </div>
+            </div>
+        </section>
 
-                <section class="actions-grid">
+        <!-- 6. Grid de Ações Rápidas (E-mail e Copiar Link) com LED rotativo individual -->
+        <section class="actions-grid">
+            <div class="led-box">
+                <div class="led-content">
                     <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
                         <i class="fa-solid fa-envelope"></i> E-mail
                     </a>
-                    <button class="action-btn" id="btn-copy">
+                </div>
+            </div>
+
+            <div class="led-box">
+                <div class="led-content">
+                    <button class="action-btn" id="btn-copy" style="background: transparent; border: none; width: 100%;">
                         <i class="fa-solid fa-link"></i> Copiar Link
                     </button>
-                </section>
+                </div>
             </div>
-        </div>
+        </section>
 
         <footer class="footer">
             <div class="social-row">
