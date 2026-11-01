@@ -158,7 +158,6 @@
             filter: contrast(1.1) brightness(1.1);
         }
 
-        /* Canvas de partículas de pixel à volta da foto */
         #avatar-pixels {
             position: absolute;
             top: -20px;
@@ -413,6 +412,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .action-btn:hover {
@@ -482,7 +482,6 @@
             opacity: 1;
         }
 
-        /* Media Queries */
         @media (max-width: 400px) {
             .main-container {
                 padding: 16px 12px;
@@ -495,10 +494,7 @@
 </head>
 <body>
 
-    <!-- Canvas para Partículas de Fundo -->
     <canvas id="bg-canvas"></canvas>
-
-    <!-- Scanlines efeito CRT -->
     <div class="scanlines"></div>
 
     <main class="main-container">
@@ -573,11 +569,11 @@
 
         </section>
 
-        <!-- Grid de Ações Rápidas -->
+        <!-- Grid de Ações Rápidas (Com E-mail e Copiar Link) -->
         <section class="actions-grid">
-            <button class="action-btn" id="btn-share">
-                <i class="fa-solid fa-share-nodes"></i> Compartilhar
-            </button>
+            <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
+                <i class="fa-solid fa-envelope"></i> E-mail
+            </a>
             <button class="action-btn" id="btn-copy">
                 <i class="fa-solid fa-link"></i> Copiar Link
             </button>
@@ -589,6 +585,7 @@
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
                 <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
             <span>© Caio Alencar • Hosted on Vercel</span>
         </footer>
@@ -628,5 +625,4 @@
         });
 
         class Particle {
-            constructor() {
-                this.x = Math.r
+            constructor(
