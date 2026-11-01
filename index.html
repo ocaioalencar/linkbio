@@ -164,7 +164,7 @@
             border-radius: 50%;
             background-color: #030205;
             display: block;
-            transition: transform 0.3s ease, filter 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
         }
 
         .avatar-wrapper:hover .avatar-img,
@@ -465,7 +465,8 @@
             <div class="profile-content">
                 <section class="profile-card" style="width: 100%; border: none; background: transparent; box-shadow: none; padding: 0;">
                     <div class="avatar-wrapper">
-                        <img src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
+                        <!-- Imagem com ID para alteração sequencial pelo script -->
+                        <img id="profile-avatar" src="imagem.jpg" alt="Caio Alencar" class="avatar-img" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Caio'">
                     </div>
                     
                     <h1 class="profile-name">CAIO ALENCAR</h1>
@@ -559,6 +560,22 @@
     </div>
 
     <script>
+        // --- SEQUÊNCIA DE IMAGENS ATÉ A IMAGEM 6 (1 SEGUNDO DE INTERVALO) ---
+        const images = ["imagem.jpg", "imagem2.jpg", "imagem3.jpg", "imagem4.jpg", "imagem5.jpg", "imagem6.jpg"];
+        let currentImageIndex = 0;
+        const avatarImg = document.getElementById("profile-avatar");
+
+        setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            
+            // Efeito suave de fade na troca
+            avatarImg.style.opacity = "0.3";
+            setTimeout(() => {
+                avatarImg.src = images[currentImageIndex];
+                avatarImg.style.opacity = "1";
+            }, 150);
+        }, 1000); // 1000ms = 1 segundo
+
         // --- BACKGROUND FLUTUANTE DE CÓDIGOS, JOGOS E EMOJIS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
