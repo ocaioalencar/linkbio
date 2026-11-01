@@ -497,9 +497,9 @@
     <canvas id="bg-canvas"></canvas>
     <div class="scanlines"></div>
 
-    <!-- Elemento de Áudio HTML5 confiável (Synthwave Stream/MP3) -->
+    <!-- Áudio local apontando para music.mp3 -->
     <audio id="cyber-audio" loop preload="auto">
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-2099-10701.mp3" type="audio/mpeg">
+        <source src="music.mp3" type="audio/mpeg">
     </audio>
 
     <main class="main-container">
@@ -584,7 +584,7 @@
             </button>
         </section>
 
-        <!-- Rodapé Atualizado -->
+        <!-- Rodapé Personalizado -->
         <footer class="footer">
             <div class="social-row">
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
@@ -619,4 +619,9 @@
         const mouse = { x: null, y: null, radius: 140 };
 
         window.addEventListener('mousemove', (e) => {
-            mouse.x = 
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            m
