@@ -409,6 +409,7 @@
             color: var(--neon-cyan);
         }
 
+        /* Notificação Toast Corrigida */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -418,22 +419,23 @@
             border: 1px solid var(--neon-cyan);
             box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
             border-radius: 30px;
-            padding: 10px 24px;
+            padding: 12px 24px;
             font-family: var(--font-code);
             font-size: 0.85rem;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 8px;
-            z-index: 100;
+            gap: 10px;
+            z-index: 9999;
             opacity: 0;
+            visibility: hidden;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            pointer-events: none;
         }
 
         .toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -533,6 +535,7 @@
         </footer>
     </main>
 
+    <!-- Toast de Notificação -->
     <div class="toast" id="toast">
         <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan);"></i>
         <span id="toast-message">Link copiado com sucesso!</span>
@@ -592,4 +595,86 @@
                 this.vx = (Math.random() - 0.5) * 0.9;
                 this.vy = (Math.random() - 0.5) * 0.9;
                 
-                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14
+                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.4 + 0.5;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < -40) this.x = width + 40;
+                if (this.x > width + 40) this.x = -40;
+                if (this.y < -40) this.y = height + 40;
+                if (this.y > height + 40) this.y = -40;
+
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        this.x -= (dx / distance) * force * 3;
+                        this.y -= (dy / distance) * force * 3;
+                    }
+                }
+            }
+        }
+
+        let elementsArray = [];
+        function initElements() {
+            elementsArray = [];
+            const count = Math.floor((width * height) / 12000); 
+            for (let i = 0; i < count; i++) {
+                elementsArray.push(new FloatingElement());
+            }
+        }
+        initElements();
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < elementsArray.length; i++) {
+                elementsArray[i].update();
+                elementsArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- COPIAR LINK COM NOTIFICAÇÃO ---
+        const btnCopy = document.getElementById('btn-copy');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        let toastTimer = null;
+
+        function showToast(msg) {
+            toastMessage.innerText = msg;
+            toast.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { 
+                toast.classList.remove('show'); 
+            }, 3000);
+        }
+
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link do perfil copiado com sucesso!');
+            }).catch(() => {
+                showToast('Erro ao copiar o link.');
+            });
+        });
+    </script>
+</body>
+</html>
