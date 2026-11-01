@@ -497,6 +497,11 @@
     <canvas id="bg-canvas"></canvas>
     <div class="scanlines"></div>
 
+    <!-- Elemento de Áudio HTML5 confiável (Synthwave Stream/MP3) -->
+    <audio id="cyber-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-2099-10701.mp3" type="audio/mpeg">
+    </audio>
+
     <main class="main-container">
         <!-- Header de Perfil -->
         <section class="profile-card">
@@ -569,7 +574,7 @@
 
         </section>
 
-        <!-- Grid de Ações Rápidas (Com E-mail e Copiar Link) -->
+        <!-- Grid de Ações Rápidas -->
         <section class="actions-grid">
             <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
                 <i class="fa-solid fa-envelope"></i> E-mail
@@ -579,7 +584,7 @@
             </button>
         </section>
 
-        <!-- Rodapé -->
+        <!-- Rodapé Atualizado -->
         <footer class="footer">
             <div class="social-row">
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
@@ -587,7 +592,7 @@
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
                 <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
-            <span>© Powered by Caio Alencar • 2026</span>
+            <span>Powered by Caio Alencar • 2026</span>
         </footer>
     </main>
 
@@ -597,7 +602,6 @@
         <span id="toast-message">Link copiado com sucesso!</span>
     </div>
 
-    <!-- Script de Efeitos Interativos -->
     <script>
         // --- 1. CANVAS DE PARTÍCULAS INTERATIVO ---
         const canvas = document.getElementById('bg-canvas');
@@ -615,14 +619,4 @@
         const mouse = { x: null, y: null, radius: 140 };
 
         window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-
-        window.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        class Particle {
-            constructor(
+            mouse.x = 
