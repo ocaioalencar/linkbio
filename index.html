@@ -397,19 +397,34 @@
         .social-row {
             display: flex;
             gap: 16px;
+            align-items: center;
         }
 
         .social-link {
             color: var(--text-muted);
             font-size: 1.1rem;
             transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-link svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+            transition: fill 0.3s;
+        }
+
+        .social-link:hover svg {
+            fill: var(--neon-cyan);
         }
 
         .social-link:hover {
             color: var(--neon-cyan);
         }
 
-        /* Notificação Toast Corrigida */
+        /* Notificação Toast */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -528,7 +543,10 @@
                 <a href="https://github.com/ocaioalencar" target="_blank" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
                 <a href="https://instagram.com/ocaioalencar" target="_blank" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://x.com/ocaioalencar" target="_blank" class="social-link" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                <!-- Ícone SVG Oficial do X (Twitter) garantido no rodapé -->
+                <a href="https://x.com/ocaioalencar" target="_blank" class="social-link" title="X (Twitter)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
                 <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
             <span>Powered by Caio Alencar • 2026</span>
@@ -579,102 +597,4 @@
             mouse.y = null;
         });
 
-        const symbols = [
-            '{ }', '</>', '=>', '⚡', '🎮', '🕹️', '🛡️', 'bug', '404', '👾', '🎧',
-            'root', '01', '</c>', 'sys', 'sudo', 'exec', 'CPU', 'RAM', 
-            '1010', 'hack', 'const', 'let', 'fn()', '⚔️', '💻', 'encrypt',
-            '🚀', '🔥', '🔒', '💡', '🤖', '✨'
-        ];
-
-        class FloatingElement {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.text = symbols[Math.floor(Math.random() * symbols.length)];
-                this.fontSize = Math.floor(Math.random() * 8) + 12;
-                this.vx = (Math.random() - 0.5) * 0.9;
-                this.vy = (Math.random() - 0.5) * 0.9;
-                
-                const colors = ['#00f3ff', '#bc13fe', '#ff007f', '#39ff14'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.4 + 0.5;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.font = `600 ${this.fontSize}px 'Fira Code', monospace`;
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.fillText(this.text, this.x, this.y);
-                ctx.restore();
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < -40) this.x = width + 40;
-                if (this.x > width + 40) this.x = -40;
-                if (this.y < -40) this.y = height + 40;
-                if (this.y > height + 40) this.y = -40;
-
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= (dx / distance) * force * 3;
-                        this.y -= (dy / distance) * force * 3;
-                    }
-                }
-            }
-        }
-
-        let elementsArray = [];
-        function initElements() {
-            elementsArray = [];
-            const count = Math.floor((width * height) / 12000); 
-            for (let i = 0; i < count; i++) {
-                elementsArray.push(new FloatingElement());
-            }
-        }
-        initElements();
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            for (let i = 0; i < elementsArray.length; i++) {
-                elementsArray[i].update();
-                elementsArray[i].draw();
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // --- COPIAR LINK COM NOTIFICAÇÃO ---
-        const btnCopy = document.getElementById('btn-copy');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-        let toastTimer = null;
-
-        function showToast(msg) {
-            toastMessage.innerText = msg;
-            toast.classList.add('show');
-            if (toastTimer) clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => { 
-                toast.classList.remove('show'); 
-            }, 3000);
-        }
-
-        btnCopy.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast('Link do perfil copiado com sucesso!');
-            }).catch(() => {
-                showToast('Erro ao copiar o link.');
-            });
-        });
-    </script>
-</body>
-</html>
+        const symbols = 
