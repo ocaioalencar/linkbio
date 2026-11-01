@@ -77,39 +77,48 @@
             gap: 16px;
         }
 
-        /* --- MOLDURA LED COM RITMO SINCRONIZADO (EASE-IN-OUT) --- */
+        /* --- MOLDURA LED 100% SINCRONIZADA (PATHLENGTH 100) --- */
         .led-box {
             position: relative;
             width: 100%;
             border-radius: 22px;
-            padding: 2px;
-            overflow: hidden;
             background: rgba(18, 16, 32, 0.5);
             transition: transform 0.3s ease;
         }
 
-        .led-box::before {
-            content: '';
+        .led-svg {
             position: absolute;
-            top: -200%;
-            left: -200%;
-            width: 500%;
-            height: 500%;
-            background: conic-gradient(
-                from 0deg at 50% 50%,
-                transparent 0deg,
-                transparent 250deg,
-                var(--neon-cyan) 310deg, 
-                var(--neon-purple) 340deg, 
-                var(--neon-pink) 360deg
-            );
-            /* Alterado para ease-in-out para que todos alterem a velocidade juntos em harmonia */
-            animation: rotate-led 8s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
         }
 
-        @keyframes rotate-led {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .led-bg-line {
+            fill: none;
+            stroke: rgba(0, 243, 255, 0.12);
+            stroke-width: 2;
+        }
+
+        .led-anim-line {
+            fill: none;
+            stroke: url(#led-grad);
+            stroke-width: 3;
+            stroke-dasharray: 25 75; /* 25% do perímetro visível a viajar em conjunto */
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px #00f3ff);
+            animation: led-travel 8s ease-in-out infinite;
+        }
+
+        @keyframes led-travel {
+            0% {
+                stroke-dashoffset: 100;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
         }
 
         .led-box:hover {
@@ -390,9 +399,24 @@
 </head>
 <body>
 
+    <!-- SVG Global de Gradientes Neon -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <linearGradient id="led-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00f3ff" />
+                <stop offset="50%" stop-color="#bc13fe" />
+                <stop offset="100%" stop-color="#ff007f" />
+            </linearGradient>
+        </defs>
+    </svg>
+
     <main class="main-container">
         <!-- 1. Caixa de Apresentação -->
         <div class="led-box">
+            <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+            </svg>
             <div class="led-content">
                 <section class="profile-card">
                     <div class="avatar-wrapper">
@@ -409,6 +433,10 @@
         <section class="links-container">
             <!-- 2. Botão GitHub -->
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <a href="https://github.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card highlight">
                         <div class="link-left">
@@ -425,6 +453,10 @@
 
             <!-- 3. Botão Instagram -->
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <a href="https://instagram.com/ocaioalencar" target="_blank" rel="noopener noreferrer" class="link-card">
                         <div class="link-left">
@@ -441,6 +473,10 @@
 
             <!-- 4. Botão Facebook -->
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <a href="https://facebook.com/ocaioalencar1" target="_blank" rel="noopener noreferrer" class="link-card">
                         <div class="link-left">
@@ -457,6 +493,10 @@
 
             <!-- 5. Caixa do Tweet do X -->
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <div class="x-feed-card">
                         <div class="x-header">
@@ -481,6 +521,10 @@
         <!-- 6. Grid de Ações Rápidas (E-mail e Copiar Link) -->
         <section class="actions-grid">
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <a href="mailto:caiocastro_ap@hotmail.com" class="action-btn">
                         <i class="fa-solid fa-envelope"></i> E-mail
@@ -489,6 +533,10 @@
             </div>
 
             <div class="led-box">
+                <svg class="led-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-bg-line" />
+                    <rect x="1" y="1" width="98" height="98" rx="18" ry="18" pathLength="100" class="led-anim-line" />
+                </svg>
                 <div class="led-content">
                     <button class="action-btn" id="btn-copy" style="background: transparent; border: none; width: 100%;">
                         <i class="fa-solid fa-link"></i> Copiar Link
@@ -504,34 +552,4 @@
                 <a href="https://facebook.com/ocaioalencar1" target="_blank" class="social-link" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
                 <a href="mailto:caiocastro_ap@hotmail.com" class="social-link" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
             </div>
-            <span>Powered by Caio Alencar • 2026</span>
-        </footer>
-    </main>
-
-    <div class="toast" id="toast">
-        <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan);"></i>
-        <span id="toast-message">Link copiado com sucesso!</span>
-    </div>
-
-    <script>
-        // --- COPIAR LINK ---
-        const btnCopy = document.getElementById('btn-copy');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-
-        function showToast(msg) {
-            toastMessage.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        btnCopy.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast('Link do perfil copiado!');
-            }).catch(() => {
-                showToast('Erro ao copiar o link.');
-            });
-        });
-    </script>
-</body>
-</html>
+            <span>Powered by C
